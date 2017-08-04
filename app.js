@@ -47,7 +47,8 @@ app.post('/api/members', (req, res) => {
                 country: response.country,
                 area: response.begin_area.name,
                 gender: response.gender,
-                links: links
+                links: links,
+                instrument: []
               }
             ])
           })
