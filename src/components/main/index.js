@@ -6,11 +6,6 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import Subheader from 'material-ui/Subheader';
 
-const style = {
-  width: 600,
-  height: 600
-}
-
 class Main extends React.Component {
   constructor(props){
     super(props)
@@ -20,10 +15,22 @@ class Main extends React.Component {
     wiki().page(this.state.group)
     .then(page => page.info('currentMembers'))
     .then(info => {
+      console.log(info)
       if(info){
-        this.setState({current: info})
+        var images = {}
+        info.forEach((member, index) => {
+          fetch('http://localhost:8181/api/image', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({member: member})})
+          .then(response => response.json)
+          .then(json => {
+            images[member] = json;
+            if(index === info.length - 1){
+              this.setState({images: images, current: info, loading: false})
+            }
+          })
+        })
+      } else {
+        this.setState({loading: false})
       }
-      this.setState({loading: false})
     })
   }
   render() {
