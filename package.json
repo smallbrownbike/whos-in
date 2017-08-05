@@ -10,6 +10,7 @@
     "nodebrainz": "^2.1.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-input-autosize": "^1.1.4",
     "semantic-ui-react": "^0.71.3",
     "wikijs": "^3.2.0"
   },

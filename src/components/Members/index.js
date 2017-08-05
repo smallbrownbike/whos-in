@@ -3,7 +3,6 @@ import { Card, Image, Transition } from 'semantic-ui-react'
 
 export default class Members extends React.Component{
   render(){
-    console.log(this.props)
     return(
       <Card.Group itemsPerRow={3}>
         {this.props.members.map((member, index) => {
