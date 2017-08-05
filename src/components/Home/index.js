@@ -11,7 +11,6 @@ export default class Home extends React.Component{
     .then(response => response.json())
     .then(json => {
       this.setState({top: json.top, loading: false})
-      console.log(this.state.top)
     })
   }
   render(){

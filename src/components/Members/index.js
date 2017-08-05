@@ -32,9 +32,7 @@ export default class Members extends React.Component{
               </Transition>
             )
           })}
-          
         </Card.Group>
-        
       )
     }
   }

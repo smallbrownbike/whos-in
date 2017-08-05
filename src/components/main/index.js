@@ -11,13 +11,12 @@ class Main extends React.Component {
   
   generateContent(location){
     if(!this.state.loading){
-      this.setState({visible: false})
+      this.setState({loading: true, visible: false})
     }
     var group = decodeURIComponent(location)
     fetch('http://localhost:8181/api/members', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({group: group})})
     .then(response => response.json())
     .then(json => {
-      console.log(json)
       if(json.error){
         this.setState({error: json.error})
       } else if(json[0].person){
@@ -49,7 +48,6 @@ class Main extends React.Component {
                   <Members visible={this.state.visible} members={this.state.past} current={false}/>
               </div>
             </div>
-          
         );
       } else if(this.state.error){
         return (
@@ -60,7 +58,14 @@ class Main extends React.Component {
       }
     } else {
       return (
-        <Loader active />
+        <div className='ui container'>
+          <div className='mtop'>
+            <h2>Likely Current Members</h2>
+              <Loader active inline='centered' />
+            <h2>Likely Past Members</h2>
+              <Loader active inline='centered' />
+          </div>
+        </div>
       )
     }
   }
