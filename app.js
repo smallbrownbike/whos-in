@@ -16,41 +16,47 @@ app.use(express.static(path.resolve(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.post('/api/top', (req, res) => {
+  Top.find({}, (err, top) => {
+    if(err){
+      console.error(err)
+    } else {
+      top.sort((a, b) => {
+        return b.count - a.count
+      })
+      res.json({
+        top: top
+      })
+    }
+  })
+})
 app.post('/api/members', (req, res) => {
   var group = req.body.group.toLowerCase();
   nb.search('artist', {artist: group}, function(err, response){
     if(response.artists.length > 0){
       var mbid = response.artists[0].id;
       nb.artist(mbid, {inc:'artist-rels'}, function(err, response){
-        if(response.type === 'Person'){
-            nb.artist(mbid, {inc:'url-rels'}, function(err, response){
-            if(response.relations){
-              var links = []
-              response.relations.forEach((link) => {
-                if(link.type === 'bandcamp' || link.type === 'social network' || link.type === 'wikipedia'){
-                  links.push(link.url.resource)
-                }
-              })
+        if(response.type === 'Person') {
+          var person =[]
+          var members = []
+          bing.list({
+            keyword: group,
+            num: 1
+          })
+          .then((image) => {            
+            person.push({
+              name: response.name,
+              begin: response['life-span'].begin,
+              end: response['life-span'].end,
+              instrument: [response.disambiguation],
+              image: image[0].url ? image[0].url : null
+            })
+            if(response['life-span'].ended){
+              members.push([], person)
+            } else {
+              members.push(person, [])
             }
-            bing.list({
-              keyword: group,
-              num: 1
-            })
-            .then((image) => {
-              res.json([
-                {
-                  person: true,
-                  name: response.name,
-                  image: image[0].url,
-                  born: response['life-span'].begin,
-                  country: response.country,
-                  area: response.begin_area.name,
-                  gender: response.gender,
-                  links: links,
-                  instrument: []
-                }
-              ])
-            })
+            res.json(members)
           })
         } else {
           var currentMembers = []
@@ -96,24 +102,26 @@ app.post('/api/members', (req, res) => {
       res.json({error: 'Couldn\'t find the members of ' + group})
     }
   });
-  Top.find({}, (err, result) => {
-    if(result.length < 1000){
-      Top.findOne({group: group}, (err, top) => {
-        if(err){
-          console.error(err)
-        } else if(!top) {
-          var newTop = new Top({
-            group: group,
-            count: 1
-          })
-          newTop.save()
-        } else if(top){
-          top.count += 1
-          top.save()
-        }
-      })
-    }
-  })
+  if(group){
+    Top.find({}, (err, result) => {
+      if(result.length < 1000){
+        Top.findOne({group: group}, (err, top) => {
+          if(err){
+            console.error(err)
+          } else if(!top) {
+            var newTop = new Top({
+              group: group,
+              count: 1
+            })
+            newTop.save()
+          } else if(top){
+            top.count += 1
+            top.save()
+          }
+        })
+      }
+    })
+  }
 })
 
 app.listen(process.env.PORT || 8181, process.env.IP, function(){

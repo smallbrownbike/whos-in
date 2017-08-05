@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 export default class Search extends React.Component{
   constructor(props){
     super(props)
-    this.state = {input: '', group: decodeURIComponent(window.location.pathname.slice(3))}
+    this.state = {input: ''}
   }
   render(){
     return(
@@ -13,14 +13,14 @@ export default class Search extends React.Component{
         <div className='search'>
         <div className='inline'>Who's in </div>         
         <AutosizeInput
-          placeholder={this.state.group || 'Search...'}
+          placeholder={this.props.group || 'search...'}
           value={this.state.input}
           onChange={(e) => {
             this.setState({input: e.target.value})
           }}
           onKeyPress={(e) => {
             if(e.key === 'Enter'){
-              this.setState({input: '', group: e.target.value})
+              this.setState({input: ''})
               this.props.history.push('/b/' + encodeURIComponent(e.target.value));
             }
           }}

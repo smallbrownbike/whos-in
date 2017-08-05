@@ -6,10 +6,14 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import Search from './components/Search'
 import './index.css';
 
+function getGroup(){
+  return decodeURIComponent(window.location.pathname.slice(3))
+}
+
 ReactDOM.render(
   <BrowserRouter>
     <div>
-      <Route path = '*' component={Search} />
+      <Route path = '*' render={(props) => (<Search {...props} group={getGroup()}/>)} />
       <Route exact path = '/' component={Home} />
       <Route path = '/b/' component={Main} />
     </div>
