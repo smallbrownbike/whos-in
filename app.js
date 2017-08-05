@@ -1,5 +1,7 @@
 const express = require('express'),
       app = express(),
+      mongoose = require('mongoose'),
+      Top = require('./models/top'),
       path = require('path'),
       bodyParser = require('body-parser'),
       cors = require('cors'),
@@ -8,18 +10,14 @@ const express = require('express'),
       nb = new NB({userAgent:'my-awesome-app/0.0.1 ( http://my-awesome-app.com )'}),
       bing = new Scraper.Bing();
 
-
-
-
-
-
+mongoose.connect(process.env.MONGO);
 app.use(cors())
 app.use(express.static(path.resolve(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/api/members', (req, res) => {
-  var group = req.body.group;
+  var group = req.body.group.toLowerCase();
   nb.search('artist', {artist: group}, function(err, response){
     if(response.artists.length > 0){
       var mbid = response.artists[0].id;
@@ -98,6 +96,24 @@ app.post('/api/members', (req, res) => {
       res.json({error: 'Couldn\'t find the members of ' + group})
     }
   });
+  Top.find({}, (err, result) => {
+    if(result.length < 1000){
+      Top.findOne({group: group}, (err, top) => {
+        if(err){
+          console.error(err)
+        } else if(!top) {
+          var newTop = new Top({
+            group: group,
+            count: 1
+          })
+          newTop.save()
+        } else if(top){
+          top.count += 1
+          top.save()
+        }
+      })
+    }
+  })
 })
 
 app.listen(process.env.PORT || 8181, process.env.IP, function(){

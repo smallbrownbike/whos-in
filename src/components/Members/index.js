@@ -3,7 +3,6 @@ import { Card, Image, Transition } from 'semantic-ui-react'
 
 export default class Members extends React.Component{
   render(){
-    console.log(this.props)
     if(this.props.members.length === 0){
       return(
         <div>None</div>
