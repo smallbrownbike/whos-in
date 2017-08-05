@@ -74,7 +74,7 @@ app.post('/api/members', (req, res) => {
                   instrument: rel.attributes,
                   image: image[0].url ? image[0].url : null
                 })
-              } else {
+              } else if(!response['life-span'].ended) {
                 currentMembers.push({
                   name: name,
                   begin: rel.begin,
