@@ -14,6 +14,7 @@
 input{
   outline: none !important;
   border: none !important;
+  width: 320px;
 }
 .mtop{
   margin-top: 5rem;
@@ -23,4 +24,8 @@ input{
 }
 .inline{
   display: inline;
+}
+.homeSearch{
+  display: inline;
+  font-size: 5em;
 }

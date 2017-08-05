@@ -3,6 +3,7 @@ import { Card, Image, Transition } from 'semantic-ui-react'
 
 export default class Members extends React.Component{
   render(){
+    console.log(this.props)
     if(this.props.members.length === 0){
       return(
         <div>None</div>
@@ -12,7 +13,7 @@ export default class Members extends React.Component{
         <Card.Group itemsPerRow={3}>
           {this.props.members.map((member, index) => {
             return (
-              <Transition visible={this.props.visible} animation='scale' duration={500}>
+              <Transition visible={this.props.visible || false} animation='scale' duration={500}>
                 <Card
                   onClick={()=>{window.open('http://www.wikiwand.com/en/' + member.name, '_blank')}}
                 >
