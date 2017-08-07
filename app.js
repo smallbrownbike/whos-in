@@ -58,7 +58,7 @@ app.post('/api/members', (req, res) => {
             }
             res.json(members)
           })
-        } else {
+        } else if(response.relations.length > 0){
           var currentMembers = []
           var pastMembers = []
           var members = []
@@ -70,22 +70,19 @@ app.post('/api/members', (req, res) => {
               num: 1
             })
             .then((image) => {
+              var obj = {
+                name: name,
+                begin: rel.begin,
+                end: rel.end,
+                instrument: rel.attributes,
+                image: image[0].url ? image[0].url : null
+              }
               if(rel.ended){
-                pastMembers.push({
-                  name: name,
-                  begin: rel.begin,
-                  end: rel.end,
-                  instrument: rel.attributes,
-                  image: image[0].url ? image[0].url : null
-                })
+                pastMembers.push(obj)
               } else if(!response['life-span'].ended) {
-                currentMembers.push({
-                  name: name,
-                  begin: rel.begin,
-                  end: rel.end,
-                  instrument: rel.attributes,
-                  image: image[0].url ? image[0].url : null
-                })
+                currentMembers.push(obj)
+              } else if(response['life-span'].ended && rel.type !== 'tribute'){
+                pastMembers.push(obj)
               }
               count += 1;
               if(count === response.relations.length){
@@ -96,6 +93,8 @@ app.post('/api/members', (req, res) => {
                 console.log('err',err);
             })
           })
+        } else {
+          res.json({error: 'Couldn\'t find the members of ' + group})
         }
       })
     } else {
