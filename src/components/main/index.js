@@ -14,7 +14,7 @@ class Main extends React.Component {
       this.setState({loading: true, visible: false})
     }
     var group = decodeURIComponent(location)
-    fetch('http://localhost:8181/api/members', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({group: group})})
+    fetch('http://whosin.herokuapp.com/api/members', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({group: group})})
     .then(response => response.json())
     .then(json => {
       if(json.error){

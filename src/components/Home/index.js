@@ -9,7 +9,7 @@ export default class Home extends React.Component{
   componentDidMount(){
     this.updateCard();
     window.addEventListener("resize", this.updateCard.bind(this));
-    fetch('http://localhost:8181/api/top', {method: 'POST'})
+    fetch('http://whosin.herokuapp.com/api/top', {method: 'POST'})
     .then(response => response.json())
     .then(json => {
       this.setState({top: json.top, loading: false})
