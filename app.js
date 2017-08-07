@@ -77,12 +77,14 @@ app.post('/api/members', (req, res) => {
                 instrument: rel.attributes,
                 image: image[0].url ? image[0].url : null
               }
-              if(rel.ended){
-                pastMembers.push(obj)
-              } else if(!response['life-span'].ended) {
-                currentMembers.push(obj)
-              } else if(response['life-span'].ended && rel.type !== 'tribute'){
-                pastMembers.push(obj)
+              if(rel.type === 'member of band'){
+                if(rel.ended){
+                  pastMembers.push(obj)
+                } else if(!response['life-span'].ended) {
+                  currentMembers.push(obj)
+                } else if(response['life-span'].ended && rel.type){
+                  pastMembers.push(obj)
+                }
               }
               count += 1;
               if(count === response.relations.length){
@@ -110,7 +112,8 @@ app.post('/api/members', (req, res) => {
           } else if(!top) {
             var newTop = new Top({
               group: group,
-              count: 1
+              count: 1,
+              created: Date.now()
             })
             newTop.save()
           } else if(top){
