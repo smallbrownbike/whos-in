@@ -18,7 +18,7 @@ export default class Home extends React.Component{
       return(
         <div className='ui container'>
           <div className='mtop'>
-            <h2>Top Searches</h2>
+            <h2>Top Searches Today</h2>
             <Card.Group itemsPerRow={3}>
               {this.state.top.map((group) => {
                 return(
