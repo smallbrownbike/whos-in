@@ -1,6 +1,5 @@
 import React from 'react';
 import AutosizeInput from 'react-input-autosize';
-import {withRouter} from "react-router-dom";
 
 export default class Search extends React.Component{
   constructor(props){

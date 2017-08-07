@@ -31,9 +31,10 @@ export default class Home extends React.Component{
           <div className='mtop'>
             <h2>Top Searches Today</h2>
             <Card.Group itemsPerRow={this.state.itemsPerRow}>
-              {this.state.top.map((group) => {
+              {this.state.top.map((group, index) => {
                 return(
                   <Card
+                  key={index}
                   onClick={() => {this.props.history.push('/b/' + encodeURIComponent(group.group));}}
                   >
                     <Card.Content>

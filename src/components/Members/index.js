@@ -32,7 +32,7 @@ export default class Members extends React.Component{
          itemsPerRow={this.state.itemsPerRow}>
           {this.props.members.map((member, index) => {
             return (
-              <Transition visible={this.props.visible || false} animation='scale' duration={500}>
+              <Transition key={index} visible={this.props.visible || false} animation='scale' duration={500}>
                 <Card
                   onClick={()=>{window.open('http://www.wikiwand.com/en/' + member.name, '_blank')}}
                 >
